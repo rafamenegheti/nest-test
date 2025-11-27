@@ -13,4 +13,3 @@ export const HealthCheckResponseSchema = z.object({
 });
 
 export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
-
