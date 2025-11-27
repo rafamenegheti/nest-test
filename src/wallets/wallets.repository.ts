@@ -12,4 +12,35 @@ export class WalletsRepository implements IWalletsRepository {
       where: { userId },
     });
   }
+
+  async updateBalance(userId: string, amount: number): Promise<Wallet> {
+    return this.prisma.wallet.update({
+      where: { userId },
+      data: {
+        balance: amount,
+      },
+    });
+  }
+
+  async decrementBalance(userId: string, amount: number): Promise<Wallet> {
+    return this.prisma.wallet.update({
+      where: { userId },
+      data: {
+        balance: {
+          decrement: amount,
+        },
+      },
+    });
+  }
+
+  async incrementBalance(userId: string, amount: number): Promise<Wallet> {
+    return this.prisma.wallet.update({
+      where: { userId },
+      data: {
+        balance: {
+          increment: amount,
+        },
+      },
+    });
+  }
 }
