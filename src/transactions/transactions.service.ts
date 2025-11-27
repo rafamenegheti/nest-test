@@ -105,10 +105,12 @@ export class TransactionsService {
     });
   }
 
-  async reverse(transactionId: string, userId: string): Promise<TransactionResponse> {
-    const originalTransaction = await this.transactionsRepository.findById(
-      transactionId,
-    );
+  async reverse(
+    transactionId: string,
+    userId: string,
+  ): Promise<TransactionResponse> {
+    const originalTransaction =
+      await this.transactionsRepository.findById(transactionId);
 
     if (!originalTransaction) {
       throw new NotFoundException('Transação não encontrada');
@@ -133,7 +135,9 @@ export class TransactionsService {
     }
 
     if (originalTransaction.type !== 'TRANSFER') {
-      throw new BadRequestException('Apenas transferências podem ser revertidas');
+      throw new BadRequestException(
+        'Apenas transferências podem ser revertidas',
+      );
     }
 
     // valida se as carteiras existem
