@@ -8,6 +8,14 @@ export interface CreateTransactionData {
   status?: 'PENDING' | 'COMPLETED' | 'FAILED' | 'REVERSED';
 }
 
+export interface FindTransactionsFilters {
+  userId: string;
+  status?: 'PENDING' | 'COMPLETED' | 'FAILED' | 'REVERSED';
+  type?: 'TRANSFER' | 'REVERSAL';
+  page: number;
+  limit: number;
+}
+
 export interface ITransactionsRepository {
   create(data: CreateTransactionData): Promise<Transaction>;
   findById(id: string): Promise<Transaction | null>;
@@ -16,4 +24,8 @@ export interface ITransactionsRepository {
     status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'REVERSED',
   ): Promise<Transaction>;
   markAsReversed(id: string, reversedAt: Date): Promise<Transaction>;
+  findMany(filters: FindTransactionsFilters): Promise<Transaction[]>;
+  count(
+    filters: Omit<FindTransactionsFilters, 'page' | 'limit'>,
+  ): Promise<number>;
 }

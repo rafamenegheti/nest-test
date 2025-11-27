@@ -12,6 +12,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   TransferInput,
   TransactionResponse,
+  TransactionHistoryQuery,
+  TransactionHistoryResponse,
 } from './schemas/transaction.schema';
 
 @Injectable()
@@ -227,6 +229,40 @@ export class TransactionsService {
     });
   }
 
+  async getHistory(
+    userId: string,
+    query: TransactionHistoryQuery,
+  ): Promise<TransactionHistoryResponse> {
+    const filters = {
+      userId,
+      status: query.status,
+      type: query.type,
+      page: query.page,
+      limit: query.limit,
+    };
+
+    const [transactions, total] = await Promise.all([
+      this.transactionsRepository.findMany(filters),
+      this.transactionsRepository.count({
+        userId,
+        status: query.status,
+        type: query.type,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / query.limit);
+
+    return {
+      transactions: transactions.map((t) => this.mapToTransactionResponse(t)),
+      pagination: {
+        page: query.page,
+        limit: query.limit,
+        total,
+        totalPages,
+      },
+    };
+  }
+
   private mapToTransactionResponse(transaction: {
     id: string;
     fromUserId: string;
@@ -234,6 +270,8 @@ export class TransactionsService {
     amount: any;
     status: string;
     type: string;
+    reversed: boolean;
+    reversedAt: Date | null;
     createdAt: Date;
   }): TransactionResponse {
     return {
@@ -243,6 +281,8 @@ export class TransactionsService {
       amount: Number(transaction.amount),
       status: transaction.status as any,
       type: transaction.type as any,
+      reversed: transaction.reversed,
+      reversedAt: transaction.reversedAt?.toISOString() || null,
       createdAt: transaction.createdAt.toISOString(),
     };
   }

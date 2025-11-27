@@ -1,8 +1,10 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   Param,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -20,6 +22,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import {
   TransferInput,
   TransferInputSchema,
+  TransactionHistoryQuerySchema,
 } from './schemas/transaction.schema';
 
 @ApiTags('Transactions')
@@ -98,5 +101,27 @@ export class TransactionsController {
   })
   async reverse(@CurrentUser() user: any, @Param('id') transactionId: string) {
     return this.transactionsService.reverse(transactionId, user.id);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Listar histórico de transações',
+    description:
+      'Retorna o histórico de transações do usuário autenticado (enviadas e recebidas) com paginação e filtros opcionais',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Histórico de transações retornado com sucesso',
+    schema: {
+      $ref: '#/components/schemas/TransactionHistoryResponse',
+    } as any,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Não autenticado',
+  })
+  async getHistory(@CurrentUser() user: any, @Query() query: any) {
+    const validatedQuery = TransactionHistoryQuerySchema.parse(query);
+    return this.transactionsService.getHistory(user.id, validatedQuery);
   }
 }

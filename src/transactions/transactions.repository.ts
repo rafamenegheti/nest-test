@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   ITransactionsRepository,
   CreateTransactionData,
+  FindTransactionsFilters,
 } from './transactions.repository.interface';
 import { Transaction } from '@prisma/client';
 
@@ -47,5 +48,44 @@ export class TransactionsRepository implements ITransactionsRepository {
         status: 'REVERSED',
       },
     });
+  }
+
+  async findMany(filters: FindTransactionsFilters): Promise<Transaction[]> {
+    const where: any = {
+      OR: [{ fromUserId: filters.userId }, { toUserId: filters.userId }],
+    };
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.type) {
+      where.type = filters.type;
+    }
+
+    return this.prisma.transaction.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (filters.page - 1) * filters.limit,
+      take: filters.limit,
+    });
+  }
+
+  async count(
+    filters: Omit<FindTransactionsFilters, 'page' | 'limit'>,
+  ): Promise<number> {
+    const where: any = {
+      OR: [{ fromUserId: filters.userId }, { toUserId: filters.userId }],
+    };
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.type) {
+      where.type = filters.type;
+    }
+
+    return this.prisma.transaction.count({ where });
   }
 }
