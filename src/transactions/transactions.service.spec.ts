@@ -205,7 +205,7 @@ describe('TransactionsService', () => {
   });
 
   describe('reverse', () => {
-    const userId = 'user-from-id';
+    const userId = 'user-to-id';
     const transactionId = 'transaction-id';
 
     const mockOriginalTransaction = {
@@ -291,7 +291,7 @@ describe('TransactionsService', () => {
       );
     });
 
-    it('deve lançar ForbiddenException se não for o remetente', async () => {
+    it('deve lançar ForbiddenException se não for o destinatário', async () => {
       mockTransactionsRepository.findById.mockResolvedValue(
         mockOriginalTransaction,
       );

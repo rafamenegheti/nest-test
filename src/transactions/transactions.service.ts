@@ -128,10 +128,10 @@ export class TransactionsService {
       throw new NotFoundException('Transação não encontrada');
     }
 
-    // valida se o usuário é quem enviou a transação
-    if (originalTransaction.fromUserId !== userId) {
+    // valida se o usuário é quem recebeu a transação
+    if (originalTransaction.toUserId !== userId) {
       throw new ForbiddenException(
-        'Apenas quem enviou a transferência pode revertê-la',
+        'Apenas quem recebeu a transferência pode revertê-la',
       );
     }
 

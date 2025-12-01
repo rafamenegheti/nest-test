@@ -73,7 +73,7 @@ export class TransactionsController {
   @ApiOperation({
     summary: 'Reverter transação',
     description:
-      'Reverte uma transferência realizada. Apenas quem enviou pode reverter. A operação é atômica.',
+      'Reverte uma transferência realizada. Apenas quem recebeu pode reverter. A operação é atômica.',
   })
   @ApiResponse({
     status: 200,
@@ -93,7 +93,7 @@ export class TransactionsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Apenas quem enviou pode reverter a transação',
+    description: 'Apenas quem recebeu pode reverter a transação',
   })
   @ApiResponse({
     status: 404,
