@@ -62,7 +62,12 @@ O servidor estará disponível em `http://localhost:3000`
 
 A documentação Swagger está disponível em: `http://localhost:3000/docs`
 
-A documentação é gerada automaticamente a partir dos schemas Zod definidos nos controllers.
+## Como Funciona
+
+1. **Schemas Zod** são definidos
+2. O schema é convertido para OpenAPI usando `zodToOpenAPI` do `@asteasolutions/zod-to-openapi`
+3. O schema OpenAPI é aplicado no decorator `@ApiResponse` do NestJS Swagger
+4. A documentação é gerada automaticamente e disponibilizada em `/docs`
 
 ## Endpoints
 
@@ -80,10 +85,3 @@ A documentação é gerada automaticamente a partir dos schemas Zod definidos no
     "environment": "development"
   }
   ```
-
-## Como Funciona
-
-1. **Schemas Zod** são definidos em `schemas/health.schema.ts`
-2. O schema é convertido para OpenAPI usando `zodToOpenAPI` do `@asteasolutions/zod-to-openapi`
-3. O schema OpenAPI é aplicado no decorator `@ApiResponse` do NestJS Swagger
-4. A documentação é gerada automaticamente e disponibilizada em `/docs`
