@@ -17,9 +17,41 @@ cd api
 npm install
 ```
 
+## Configuração do Banco de Dados
+
+### Usando Docker Compose
+
+O projeto inclui um `docker-compose.yml` para facilitar a configuração do banco de dados PostgreSQL.
+
+1. **Subir o banco de dados:**
+
+```bash
+docker-compose up -d
+```
+
+Isso irá iniciar um container PostgreSQL na porta `5432`
+
+2. **Configurar variáveis de ambiente:**
+
+Eu subi o .env já que não tem nenhum dado crítico para facilitar a configuração
+
+3. **Executar migrações:**
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+```
+
+4. **Popular o banco (opcional):**
+
+```bash
+npm run prisma:seed
+```
+
 ## Executar
 
 ### Modo desenvolvimento
+
 ```bash
 npm run start:dev
 ```
@@ -27,6 +59,7 @@ npm run start:dev
 O servidor estará disponível em `http://localhost:3000`
 
 ### Modo produção
+
 ```bash
 npm run build
 npm run start:prod
@@ -41,9 +74,11 @@ A documentação é gerada automaticamente a partir dos schemas Zod definidos no
 ## Endpoints
 
 ### Health Check
+
 - `GET /health` - Verifica o status da aplicação
 
   **Resposta:**
+
   ```json
   {
     "status": "ok",
@@ -53,49 +88,9 @@ A documentação é gerada automaticamente a partir dos schemas Zod definidos no
   }
   ```
 
-## Estrutura do Projeto
-
-```
-api/
-├── src/
-│   ├── main.ts                 # Bootstrap da aplicação e configuração do Swagger
-│   ├── app.module.ts           # Módulo raiz da aplicação
-│   └── health/
-│       ├── health.module.ts    # Módulo de health check
-│       ├── health.controller.ts # Controller com rota /health
-│       └── schemas/
-│           └── health.schema.ts # Schema Zod para resposta
-├── package.json
-├── tsconfig.json
-└── nest-cli.json
-```
-
 ## Como Funciona
 
 1. **Schemas Zod** são definidos em `schemas/health.schema.ts`
 2. O schema é convertido para OpenAPI usando `zodToOpenAPI` do `@asteasolutions/zod-to-openapi`
 3. O schema OpenAPI é aplicado no decorator `@ApiResponse` do NestJS Swagger
 4. A documentação é gerada automaticamente e disponibilizada em `/docs`
-
-## Exemplo de Uso
-
-```typescript
-// Definir schema Zod
-const HealthCheckResponseSchema = z.object({
-  status: z.string(),
-  timestamp: z.string().datetime(),
-  uptime: z.number(),
-  environment: z.string(),
-});
-
-// Converter para OpenAPI
-const healthCheckOpenApiSchema = zodToOpenAPI(HealthCheckResponseSchema);
-
-// Usar no controller
-@ApiResponse({
-  status: 200,
-  description: 'Service is healthy',
-  schema: healthCheckOpenApiSchema as any,
-})
-```
-
