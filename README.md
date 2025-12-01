@@ -12,7 +12,10 @@ API construída com NestJS utilizando Zod para validação e geração automáti
 
 ## Instalação
 
+Clone o repositório
+
 ```bash
+cd nest-test
 npm install
 ```
 
@@ -46,6 +49,18 @@ npm run prisma:migrate
 ```bash
 npm run prisma:seed
 ```
+
+### Prisma Studio
+
+O Prisma Studio é uma interface visual para visualizar e editar dados no banco de dados.
+
+Para abrir o Prisma Studio:
+
+```bash
+npx prisma studio
+```
+
+O Prisma Studio estará disponível em `http://localhost:51212`
 
 ## Executar
 
