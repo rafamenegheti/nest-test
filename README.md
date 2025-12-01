@@ -13,7 +13,6 @@ API construída com NestJS utilizando Zod para validação e geração automáti
 ## Instalação
 
 ```bash
-cd api
 npm install
 ```
 
