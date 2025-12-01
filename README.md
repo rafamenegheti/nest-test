@@ -76,6 +76,18 @@ O servidor estará disponível em `http://localhost:3000`
 
 A documentação Swagger está disponível em: `http://localhost:3000/docs`
 
+## Testes
+
+O projeto inclui testes unitários e de integração usando Jest.
+
+### Executar todos os testes
+
+```bash
+npm test
+```
+
+**Nota:** Os testes de integração requerem que o banco de dados esteja rodando. Certifique-se de que o Docker Compose está ativo antes de executar.
+
 ## Como Funciona
 
 1. **Schemas Zod** são definidos
