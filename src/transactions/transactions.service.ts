@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ForbiddenException,
   Inject,
+  Logger,
 } from '@nestjs/common';
 import { IWalletsRepository } from '../wallets/wallets.repository.interface';
 import { IUsersRepository } from '../users/users.repository.interface';
@@ -18,6 +19,8 @@ import {
 
 @Injectable()
 export class TransactionsService {
+  private readonly logger = new Logger(TransactionsService.name);
+
   constructor(
     @Inject('IWalletsRepository')
     private readonly walletsRepository: IWalletsRepository,
@@ -32,6 +35,9 @@ export class TransactionsService {
     fromUserId: string,
     transferDto: TransferInput,
   ): Promise<TransactionResponse> {
+    this.logger.log(
+      `Transfer: ${fromUserId} -> ${transferDto.toUserId} - R$ ${transferDto.amount}`,
+    );
     const toUser = await this.usersRepository.findById(transferDto.toUserId);
     if (!toUser) {
       throw new NotFoundException('Usuário destinatário não encontrado');
@@ -96,8 +102,12 @@ export class TransactionsService {
           data: { status: 'COMPLETED' },
         });
 
+        this.logger.log(`Transfer completed: ${transaction.id}`);
         return this.mapToTransactionResponse(completedTransaction);
       } catch (error) {
+        this.logger.error(
+          `Transfer failed: ${transaction.id} - ${error.message}`,
+        );
         await tx.transaction.update({
           where: { id: transaction.id },
           data: { status: 'FAILED' },
