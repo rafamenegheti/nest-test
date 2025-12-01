@@ -58,13 +58,6 @@ npm run start:dev
 
 O servidor estará disponível em `http://localhost:3000`
 
-### Modo produção
-
-```bash
-npm run build
-npm run start:prod
-```
-
 ## Documentação Swagger
 
 A documentação Swagger está disponível em: `http://localhost:3000/docs`
