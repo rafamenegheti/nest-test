@@ -82,20 +82,3 @@ A documentação Swagger está disponível em: `http://localhost:3000/docs`
 2. O schema é convertido para OpenAPI usando `zodToOpenAPI` do `@asteasolutions/zod-to-openapi`
 3. O schema OpenAPI é aplicado no decorator `@ApiResponse` do NestJS Swagger
 4. A documentação é gerada automaticamente e disponibilizada em `/docs`
-
-## Endpoints
-
-### Health Check
-
-- `GET /health` - Verifica o status da aplicação
-
-  **Resposta:**
-
-  ```json
-  {
-    "status": "ok",
-    "timestamp": "2024-01-01T00:00:00.000Z",
-    "uptime": 12345,
-    "environment": "development"
-  }
-  ```
